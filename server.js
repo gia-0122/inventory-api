@@ -9,9 +9,17 @@ app.use(express.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: {
+    rejectUnauthorized: false
+  },
+  connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 30000
 });
 
+// Handle pool connection errors cleanly
+pool.on('error', (err) => {
+  console.error('Unexpected database pool error:', err);
+});
 // 1. Serve inline dashboard on root route (/)
 app.get('/', (req, res) => {
   res.send(`
