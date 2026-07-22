@@ -103,8 +103,10 @@ app.get("/api/inventory/balance", async (req, res) => {
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    console.error("Full DB Error:", err);
+    res.status(500).json({ 
+      error: err.message || err.toString() || JSON.stringify(err) || "Unknown DB Error"
+    });
   }
 });
 
